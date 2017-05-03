@@ -6,13 +6,15 @@
  
 From a command prompt
 
-```git clone https://github.com/lukedoolittle/isvcdownloader.git```
-```pip install -r isvcDownloader/requirements.txt```
-```python isvcDownloader/isvcDownloader <username> <password> <url containing video>```
+    git clone https://github.com/lukedoolittle/isvcdownloader.git
+    pip3 install -r isvcDownloader/requirements.txt
+    python3 isvcDownloader/isvcDownloader.py '<username>' '<password>' '<url containing video>'
+
+Ensure that the '' around the password argument are present especially if your password has special characters
 
 ## Limitations
 
-There are a host of different formats in the portal. This script works with some but not with others.
+There are a host of different presentation formats in the ISVC portal. This script works with some but not with others. That said it could be modified to extract the additional formats.
 
 Type | Example | Functionality
 --- | --- | ---

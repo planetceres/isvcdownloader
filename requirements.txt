@@ -1,3 +1,2 @@
-isvcDownloader
-requests>=2.13.4
-tqdm>=4.11.2
+requests
+tqdm
