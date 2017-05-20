@@ -12,7 +12,7 @@ From a command prompt
 
 Ensure that the '' around the password argument are present especially if your password has special characters
 
-## For Multiple videos
+## For Multiple Videos
 
 Choose directory to download videos to by modifying the `SAVE_DIR` variable in `isvcBulkDownloader.py`. Then, from command prompt
 
