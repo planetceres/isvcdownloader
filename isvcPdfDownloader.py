@@ -122,6 +122,27 @@ class IsvcSession:
         self,
         url):
 
+            # idx = int(start_idx)
+            # idxRange = int(end_idx) - start_idx
+            # for i in xrange(idxRange):
+            #     videoUrlId = str(url) + idx
+            #
+            #     try:
+            #         print("Trying: ".format(videoUrlId))
+            #         response = self._session.get(url)
+            #         matches = re.search(
+            #             self.VIDEO_REF_REGULAR_EXPRESSION,
+            #             response.text)
+            #         if matches is None:
+            #             raise ValueError('Could not find video reference in page ' + url)
+            #         return urlparse(matches.group(1))
+            #
+            #     except Exception as e:
+            #         print("Error: ".format(e))
+            #         pass
+            #     idx += 1
+
+
             response = self._session.get(url)
             matches = re.search(
                 self.VIDEO_REF_REGULAR_EXPRESSION,
