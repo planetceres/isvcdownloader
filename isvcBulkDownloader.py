@@ -39,30 +39,36 @@ class VideoUrlBase(ABC):
         pass
 
 class KalturaVideoUrl(VideoUrlBase):
-    MANIFEST_URL_FORMAT = ("https://www.kaltura.com/api_v3/index.php/?"
-                        "service=multirequest&format=9&1:service=session"
-                        "&1:action=startWidgetSession&1:widgetId=_{0}"
-                        "&2:service=flavorasset&2:action=getByEntryId"
-                        "&2:ks=%7B1%3Aresult%3Aks%7D&2:entryId={1}"
-                        "&callback=?")
-    FINAL_URL_FORMAT = ("https://cdnsecakmi.kaltura.com/p/{0}/sp/{1}/"
-                       "playManifest/entryId/{2}/flavorId/{3}/format/"
-                       "url/protocol/https/a.mp4")
+
 
     def __init__(
         self,
         quality):
+            self.MANIFEST_URL_FORMAT = ("https://www.kaltura.com/api_v3/index.php/?"
+                                "service=multirequest&format=9&1:service=session"
+                                "&1:action=startWidgetSession&1:widgetId=_{0}"
+                                "&2:service=flavorasset&2:action=getByEntryId"
+                                "&2:ks=%7B1%3Aresult%3Aks%7D&2:entryId={1}"
+                                "&callback=Callback") #"&callback=?")
+            self.FINAL_URL_FORMAT = ("https://cdnsecakmi.kaltura.com/p/{0}/sp/{1}/"
+                               "playManifest/entryId/{2}/flavorId/{3}/format/"
+                               "url/protocol/https/a.mp4")
             self._quality = quality
 
     def getDownloadEndpoint(
         self,
         videoRefUrl):
+            print(str(self.MANIFEST_URL_FORMAT.format(
+                videoRefUrl.netloc,
+                videoRefUrl.path.split('/')[1])))
             response = requests.get(
                     self.MANIFEST_URL_FORMAT.format(
                         videoRefUrl.netloc,
                         videoRefUrl.path.split('/')[1]))
+
             manifest = json.loads(
-                response.text.strip('?').strip(';').strip('(').strip(')'))[1]
+                #response.text.strip('?').strip(';').strip('(').strip(')'))[1]
+                response.text.strip('Callback').strip(';').strip('(').strip(')'))[1]
 
             #should search for either high or low bitrate depending on quality
             kalturaAsset = [x for x in manifest if x['fileExt'] == 'mp4'][0]
@@ -73,11 +79,12 @@ class KalturaVideoUrl(VideoUrlBase):
                 kalturaAsset['id'])
 
 class AmazonVideoUrl(VideoUrlBase):
-    FILENAME_FORMAT = 'mp4_{0}.mp4'
+
 
     def __init__(
         self,
         quality):
+            self.FILENAME_FORMAT = 'mp4_{0}.mp4'
             self._quality = quality
 
     def getDownloadEndpoint(
@@ -100,14 +107,15 @@ class VideoUrlFactory:
                 raise TypeError(scheme + ' is not supported')
 
 class IsvcSession:
-    _session = requests.Session()
-    LOGIN_URL = 'https://learn.datascience.berkeley.edu/local/login/index.php'
-    VIDEO_REF_REGULAR_EXPRESSION = 'videoRef: "(\S+)"'
+
 
     def __init__(
         self,
         username,
         password):
+            self._session = requests.Session()
+            self.LOGIN_URL = 'https://learn.datascience.berkeley.edu/local/login/index.php'
+            self.VIDEO_REF_REGULAR_EXPRESSION = 'videoRef: "(\S+)"'
             payload={
                 'username' : username,
                 'password' : password,
@@ -155,6 +163,7 @@ idx = start_idx
 idxRange = end_idx - start_idx
 for i in range(idxRange + 1):
     videoUrlId = baseUrl + str(idx)
+
     try:
         print("Trying: {0}".format(videoUrlId))
         videoRefUrl = (IsvcSession(
